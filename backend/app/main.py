@@ -9,6 +9,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import engine, get_session
 
+from app.routers.auth import router as auth_router
+from app.routers.organizations import router as organizations_router
+
+
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +29,9 @@ app = FastAPI(
     title="Expense & Approval API",
     lifespan=lifespan,
 )
+
+app.include_router(auth_router)
+app.include_router(organizations_router)
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
