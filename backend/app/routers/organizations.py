@@ -135,3 +135,16 @@ async def add_member(
 
     await session.refresh(membership)
     return membership
+
+
+@router.get("/{organization_id}/members", response_model=list[MembershipRead])
+async def get_organization_members(
+    session: SessionDep,
+    owner_membership: OwnerDep,
+):
+    query_stmt = select(Membership).where(
+        Membership.organization_id == owner_membership.organization_id
+    )
+
+    query_res = await session.execute(query_stmt)
+    return query_res.scalars().all()
